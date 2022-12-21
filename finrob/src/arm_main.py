@@ -78,13 +78,15 @@ base_us = rospy.get_param('/servo_cmd_us_for_mapping_joint_01')
 
 # start of non-blocking timer variable
 # the tim1_dur allows for the timer to be ignored on start up
-tim1_dur = rospy.get_param('tim1_dur')
+tim1_dur = rospy.get_param('/tim1_dur')
 tim1 = time.time() - tim1_dur
 
+mtr_spd_l = rospy.get_param('/mtr_spd_l')
+mtr_spd_r = rospy.get_param('/mtr_spd_r')
 def main(): 
     rospy.init_node('arm_main', anonymous=False)
 
-    sub_obs_pos = rospy.Subscriber('/obs_pos', ObsPos, check_dist)
+    sub_obs_pos = rospy.Subscriber('/obs_pos', ObsPos, check_obs)
       
     # Spin() to keep the node from exiting
     rospy.spin()
@@ -215,7 +217,7 @@ def move_obs(msg_in):
     motors.motor1.setSpeed(0)
     motors.motor2.setSpeed(0)
 
-    if(msg_in.y == 1): #Left
+    if(msg_in.lcr == 1): #Left
         # Moves arm to starting position
         pos = L_start
         compute_joint_angles(pos)
@@ -251,7 +253,7 @@ def move_obs(msg_in):
 # =============================================================================
 # # Intermediate function between triangulation and move_obs
 # =============================================================================
-def check_dist(msg_in):
+def check_obs(msg_in):
     global tim1, mtr_spd_l, mtr_spd_r
     # Uses a timer to prevent motors from turning on before LRFs have turned back on
     if(time.time() - tim1 > tim1_dur):

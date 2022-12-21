@@ -29,7 +29,7 @@ def sensors_reader():
     rospy.init_node('LRF_triangulation', anonymous=False)
 
     # '/obs_pt' Publisher and message setup
-    pub_obs_pt = rospy.Publisher('/obs_pt',  ObsPos, queue_size=1)
+    pub_obs_pos = rospy.Publisher('/obs_pos',  ObsPos, queue_size=1)
     msg_obs_pos = ObsPos()
 
     #----------setup serial--------------
@@ -45,7 +45,7 @@ def sensors_reader():
 
     # start of non-blocking timer variable
     # the tim1_dur allows for the timer to be ignored on start up
-    tim1_dur = rospy.get_param('tim1_dur')
+    tim1_dur = rospy.get_param('/tim1_dur')
     tim1 = time.time() - tim1_dur
 
     # MAIN LOOP to keep loading the message with new data. 
@@ -58,18 +58,18 @@ def sensors_reader():
             line = ser.readline().decode().strip() #blocking function, will wait until read entire line
             
             line = line.split(":")
-
+           
             #strips whitespace
-            l = int(line[0].replace(" ", ""))
-            c = int(line[1].replace(" ", ""))
-            r = int(line[2].replace(" ", ""))
+            l = int(line[0])
+            c = int(line[1])
+            r = int(line[2])
    
 
             # Checks if there's an obstacle within the threshold
             # publishes to "/obs_pt" regardless
             # uses a non-blocking timer to prevent repeated triggers from arm
             if(time.time() - tim1 > tim1_dur):
-                print(line)
+                #print(line)
 
                 # Picks which direction to move the arm
                 # Typically the oposite side of the obstacle 
@@ -97,8 +97,8 @@ def sensors_reader():
                 else: 
                     msg_obs_pos.lcr = False
                     msg_obs_pos.det = False
-                
-            pub_obs_pt.publish(msg_obs_pos)
+            print(msg_obs_pos)                
+            pub_obs_pos.publish(msg_obs_pos)
 
 
             continue
