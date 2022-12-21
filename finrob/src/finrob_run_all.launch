@@ -1,0 +1,16 @@
+<launch> 
+  <rosparam command="load" file="/home/pi/catkin_ws/src/mobrob_util/src/robot_info.yaml" />
+  <rosparam command="load" file="/home/pi/catkin_ws/src/armrob_util/src/robot_arm_info.yaml" />
+
+  <!-- Previously used for testing and arm placement -->
+  <group ns="arm_testing">
+    <!--node pkg="finrob" name="arm_test" type="arm_test.py"/ -->    
+  </group>
+
+  <group ns="arm_control">
+     <node pkg="finrob" name="arm_main" type="main.py" />
+     <node pkg="finrob" name="LRF_tri" type="LRF_tri.py"/>
+     <node pkg="armrob" name="command_arm" type="command_arm.py" />
+  </group>
+  
+</launch>

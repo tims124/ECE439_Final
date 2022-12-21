@@ -1,0 +1,11 @@
+triangulation.py -> /OBS_pt -> main.py
+                            -> inverse_kinematics.py
+
+main.py -> /waypoint_xy -> waypoint_seeker.py
+        -> /Path_complete -> closed_loop_path_follower.py
+                          -> set_waypoints.py
+        -> /obs_det -> inverse_kinematics.py
+                    -> wheel_control_node.py
+
+inverse_kinematics.py -> /joint_angles_desired -> command_arm.py
+                      -> /servo_commands -> command_arm.py
